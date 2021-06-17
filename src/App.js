@@ -1,4 +1,3 @@
-import './App.css';
 import React from "react";
 import UserForm from './components/UserForm';
 import UserData from './components/UserData';

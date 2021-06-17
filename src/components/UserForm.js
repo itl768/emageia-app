@@ -1,6 +1,6 @@
-import React, { useState ,useEffect} from 'react';
-import { Form, Input, Button } from 'antd';
-
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Button, message } from 'antd';
+import { writeUserData, getData, updateData, deleteData } from '../dataBase/userDataService';
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
@@ -11,29 +11,58 @@ const tailLayout = {
 function UserForm(props) {
 
   const [form] = Form.useForm();
-  const [userData,setUserData]=useState({
-    contactName:"", 
-    phoneNumber:"",
-    email:"",
-    address:""
+  const [userData, setUserData] = useState({
+    contactName: "",
+    phoneNumber: "",
+    email: "",
+    address: ""
   })
-
+  const [response, setResponse] = useState("")
+  const [onSuccess, setOnSuccess] = useState(false)
   useEffect(() => {
     if (props.userData) {
       setUserData(props.userData)
     }
   }, [props])
+
+
   form.setFieldsValue(userData);
-  console.log(props.userData)
 
 
-  const onFormSubmit = () => {
+  const onFormSubmit = async () => {
+    let response = await writeUserData(userData)
+    if (response.type === "error") {
+      message.error(response.message)
+    }
+    else if(response.type==="success"){
+      message.success(response.message)
+    }
+  }
 
+  const onUpdateClick= async ()=>{
+    let response = await updateData(userData)
+    if (response.type === "error") {
+      message.error(response.message)
+    }
+    else if(response.type==="success"){
+      message.success(response.message)
+    }
+  }
+
+  const onDeleteClick= async ()=>{
+    let response=await deleteData(userData)
+    if (response.type === "error") {
+      message.error(response.message)
+    }
+    else if(response.type==="success"){
+      message.success(response.message)
+    }
   }
 
   return (
     <>
-      <div style={{ width: 'auto', paddingTop: '20px',paddingRight: '20px',paddingBottom: '20px' }}>
+      <div style={{ width: 'auto', paddingTop: '20px', paddingRight: '20px', paddingBottom: '20px' }}>
+
         <Form
           {...layout}
           form={form}
@@ -75,16 +104,18 @@ function UserForm(props) {
                 ...prev,
                 email: e.target.value
               }))} />
+
+
           </Form.Item>
           {props.updateModal ? (
             <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" onClick={onUpdateClick}>
                 Update
               </Button>
-              <Button type="primary" danger>
+              <Button type="primary" onClick={onDeleteClick} danger>
                 Delete
               </Button>
-              
+
             </Form.Item>)
             :
             (<Form.Item {...tailLayout}>

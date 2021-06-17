@@ -1,27 +1,10 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { Table,Input,Row,Col,Modal } from 'antd';
 import UserForm from './UserForm';
 import _ from 'lodash'
+import {getData} from '../dataBase/userDataService'
 
 
-
-const dataSource = [
-    {
-      key: '1',
-      contactName: 'Mike',
-      phoneNumber: 32,
-      address: '10 Downing Street',
-      email:"lakmal@gmail.com"
-    },
-    {
-      key: '2',
-      contactName: 'John',
-      phoneNumber: 32,
-      address: '10 Downing Street',
-      email:"lakmal@gmail.com"
-    },
-  ];
-  
   const columns = [
     {
       title: 'Name',
@@ -31,7 +14,7 @@ const dataSource = [
     {
       title: 'Phone Number',
       dataIndex: 'phoneNumber',
-      key: 'age',
+      key: 'phoneNumber',
     },
     {
       title: 'Address',
@@ -48,17 +31,21 @@ const dataSource = [
  
 
 
-function UserData() {
+function UserData(props) {
 
     const [filterTable, setFilterTable] = useState(null);
-    const [baseData, setBaseData] = useState(dataSource);
+    const [baseData, setBaseData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [currentUser,setCurrentUser] = useState("")
-
-
+    const  fetchData =async ()=> {
+        const data=await getData()
+        console.log(data)
+        setBaseData(data)
+    }
+    useEffect( () => {
+        fetchData()
+    },[isModalVisible])
     const onRowClick = (record, rowIndex) => {
-       // console.log(record, rowIndex)
-       
         setCurrentUser(record)
         setIsModalVisible(true);
 
