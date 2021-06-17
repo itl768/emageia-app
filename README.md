@@ -1,7 +1,7 @@
 
-Database is already configured. No need to change any configurations. 
-Install the app and run it. 
-Few test values are already added to the db so the search function can be tested properly.
+Database is already configured. No need to change any configurations.\
+Install the app and run it.\
+Few test values are already added to the db so the search function can be tested properly.\
 
 # Getting Started with Create React App
 
