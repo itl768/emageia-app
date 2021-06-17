@@ -1,34 +1,33 @@
-import React,{useState,useEffect} from 'react'
-import { Table,Input,Row,Col,Modal } from 'antd';
+import React, { useState, useEffect } from 'react'
+import { Table, Input, Row, Col, Modal,Button } from 'antd';
 import UserForm from './UserForm';
 import _ from 'lodash'
-import {getData} from '../dataBase/userDataService'
+import { getData } from '../dataBase/userDataService'
 
 
-  const columns = [
+const columns = [
     {
-      title: 'Name',
-      dataIndex: 'contactName',
-      key: 'contactName',
+        title: 'Name',
+        dataIndex: 'contactName',
+        key: 'contactName',
+       
     },
     {
-      title: 'Phone Number',
-      dataIndex: 'phoneNumber',
-      key: 'phoneNumber',
+        title: 'Phone Number',
+        dataIndex: 'phoneNumber',
+        key: 'phoneNumber',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
     },
     {
         title: 'Email',
         dataIndex: 'email',
         key: 'email',
-      },
-  ];
-  
- 
+    },
+];
 
 
 function UserData(props) {
@@ -36,23 +35,26 @@ function UserData(props) {
     const [filterTable, setFilterTable] = useState(null);
     const [baseData, setBaseData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [currentUser,setCurrentUser] = useState("")
-    const  fetchData =async ()=> {
-        const data=await getData()
-        console.log(data)
+    const [currentUser, setCurrentUser] = useState("")
+    const fetchData = async () => {
+        const data = await getData()
         setBaseData(data)
     }
-    useEffect( () => {
+    useEffect(() => {
         fetchData()
-    },[isModalVisible])
+    }, [isModalVisible,props.onDataSubmit])
     const onRowClick = (record, rowIndex) => {
         setCurrentUser(record)
         setIsModalVisible(true);
 
     }
+    const refreshData=()=>{
+        fetchData();
+    }
+  
     const handleCancel = () => {
         setIsModalVisible(false);
-      };
+    };
 
     const search = value => {
         setFilterTable(baseData.filter(o =>
@@ -64,38 +66,74 @@ function UserData(props) {
         ))
     };
 
+    const closeModal=()=>{
+        setIsModalVisible(false);
+    }
+
+
     return (<>
-        <Col   style={{ width: '900px', padding: '20px' }}>
-        <Row justify="end">
-            <Input.Search
-                style={{ width: '300px', padding: '20px' ,flexWrap: 'wrap',
-                alignContent: 'center'}}
-                placeholder="Search by..."
-                enterButton
-                onChange={(e) => search(e.target.value)}
-            />
-        </Row>
+     <div style={{ textAlign:"center",fontSize:'20px' }}>User Contact Details</div>
+        <Col style={{ width: 'auto' }}>
+            {/* <Row >
+                <Col>
+                <Button type="primary" style={{
+                        
+                    }}>Submit</Button>
+                </Col>
+                <Col>
+                <Input.Search
+                    style={{
+                        width: '300px', padding: '20px', flexWrap: 'wrap',
+                        alignContent: 'center'
+                    }}
+                    placeholder="Search by..."
+                    enterButton
+                    onChange={(e) => search(e.target.value)}
+                />
+                </Col>
+              
+               
+            </Row> */}
 
-        <Row>
-            <Table
+            <Input.Group size="medium" style={{padding:"20px"}}>
+                <Row gutter={8} justify="end">
+                    <Col span={5}>
+                        <Input.Search
 
-            style={{ width: '100%', padding: '20px' }}
-                bordered
-                dataSource={filterTable == null ? baseData : filterTable}
-                columns={columns}
-                onRow={(record, rowIndex) => {
-                    return {
-                        onClick: () => { onRowClick(record, rowIndex) }, // click row
+                            placeholder="Search by..."
+                            enterButton
+                            onChange={(e) => search(e.target.value)}
+                        />
+                    </Col>
+                    <Col >
+                        <Button type="primary" onClick={refreshData}>Refresh</Button>
+                    </Col>
+                </Row>
+            </Input.Group>
 
-                    };
-                }} />
-        </Row>
+
+
+            <Row>
+                <Table
+
+                    style={{ width: '100%', cursor: 'pointer' }}
+                    bordered
+                    dataSource={filterTable == null ? baseData : filterTable}
+                    columns={columns}
+                    onRow={(record, rowIndex) => {
+                        return {
+                            onClick: () => { onRowClick(record, rowIndex) }, // click row
+                            onMouseEnter: () => { },
+
+                        };
+                    }} />
+            </Row>
         </Col>
 
 
-        <Modal title="Update or delete data" visible={isModalVisible}  onCancel={handleCancel} footer={null}>
-        <UserForm userData={currentUser} updateModal={true} ></UserForm>
-      </Modal>
+        <Modal  visible={isModalVisible} onCancel={handleCancel} footer={null} width={700} >
+            <UserForm userData={currentUser} updateModal={true} closeModalCallBack={closeModal} ></UserForm>
+        </Modal>
     </>
 
     )

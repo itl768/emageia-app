@@ -2,23 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { writeUserData, getData, updateData, deleteData } from '../dataBase/userDataService';
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 4,offset:2 },
+  wrapperCol: { span: 12 },
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 16},
 };
+const tailLayout2 = {
+  wrapperCol: { offset: 13},
+};
+
+const userI = {
+  contactName: "",
+  phoneNumber: "",
+  email: "",
+  address: ""
+}
 function UserForm(props) {
 
   const [form] = Form.useForm();
-  const [userData, setUserData] = useState({
-    contactName: "",
-    phoneNumber: "",
-    email: "",
-    address: ""
-  })
-  const [response, setResponse] = useState("")
-  const [onSuccess, setOnSuccess] = useState(false)
+  const [userData, setUserData] = useState(userI)
+
   useEffect(() => {
     if (props.userData) {
       setUserData(props.userData)
@@ -34,45 +38,50 @@ function UserForm(props) {
     if (response.type === "error") {
       message.error(response.message)
     }
-    else if(response.type==="success"){
+    else if (response.type === "success") {
+      setUserData(userI)
       message.success(response.message)
+      props.refreshT()
     }
   }
 
-  const onUpdateClick= async ()=>{
+  const onUpdateClick = async () => {
     let response = await updateData(userData)
     if (response.type === "error") {
       message.error(response.message)
     }
-    else if(response.type==="success"){
+    else if (response.type === "success") {
       message.success(response.message)
     }
   }
 
-  const onDeleteClick= async ()=>{
-    let response=await deleteData(userData)
+  const onDeleteClick = async () => {
+    let response = await deleteData(userData)
     if (response.type === "error") {
       message.error(response.message)
     }
-    else if(response.type==="success"){
+    else if (response.type === "success") {
       message.success(response.message)
+      props.closeModalCallBack();
     }
   }
 
   return (
     <>
-      <div style={{ width: 'auto', paddingTop: '20px', paddingRight: '20px', paddingBottom: '20px' }}>
-
+      <div>
+      {props.updateModal ?  <div style={{ textAlign:"center",fontSize:'20px',padding:'10px' }}>Update Contact Details</div> :   <div style={{ textAlign:"center",fontSize:'20px',padding:'10px' }}>User Contact Details</div>}
+  
         <Form
           {...layout}
           form={form}
           name={"userContacts"}
           onFinish={onFormSubmit}
+          title={"User Data"}
         >
           <Form.Item label="Contact Name" name="contactName" rules={[
             {
               required: true,
-              message: 'Please input your username!',
+              message: 'Please insert your Full name!',
             },
           ]}>
             <Input placeholder="Contact name"
@@ -81,11 +90,17 @@ function UserForm(props) {
                 contactName: e.target.value
               }))} />
           </Form.Item>
-          <Form.Item label="Phone Number" name="phoneNumber">
+          <Form.Item label="Phone Number" name="phoneNumber"
+          rules={[
+            {
+              type: 'number'
+            },
+          ]}
+          >
             <Input placeholder="Phone Number"
               onChange={(e) => setUserData(prev => ({
                 ...prev,
-                phoneNumber: e.target.value
+                phoneNumber: isNaN(e.target.value)?e.target.value: Number(e.target.value)
               }))} />
           </Form.Item>
           <Form.Item label="Address" name="address">
@@ -108,7 +123,7 @@ function UserForm(props) {
 
           </Form.Item>
           {props.updateModal ? (
-            <Form.Item {...tailLayout}>
+            <Form.Item {...tailLayout2}>
               <Button type="primary" onClick={onUpdateClick}>
                 Update
               </Button>
