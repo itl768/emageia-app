@@ -2,10 +2,6 @@ import firebase from 'firebase';
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid';
 
-const uudigen = () => {
-    return uuidv4();
-};
-
 
 export const writeUserData = async (data) => {
 
@@ -15,7 +11,7 @@ export const writeUserData = async (data) => {
         return { type: "error", message: "Email already exists" }
     }
     else {
-        const id = uudigen()
+        const id = uuidv4();
         firebase.database().ref('/userData/' + id).set(
             {
                 key: id,
@@ -75,22 +71,19 @@ export const getData = async () => {
             console.error(error);
         });
     return array
-
-
-
 }
 
 
-export const generateRandomdata=async( )=>{
+export const generateRandomdata = async () => {
 
 
-    for(let i=0;i<20;i++){
-      const  data={
-            contactName: "Test Name"+i,
-            phoneNumber:_.random(1000000000, 9999999999),
-            email:i+"testEmail@gmail.com",
-            address:"No-"+i+",testStreet,testTown"
-          }
+    for (let i = 0; i < 20; i++) {
+        const data = {
+            contactName: "Test Name" + i,
+            phoneNumber: _.random(1000000000, 9999999999),
+            email: i + "testEmail@gmail.com",
+            address: "No-" + i + ",testStreet,testTown"
+        }
         await writeUserData(data)
     }
 
