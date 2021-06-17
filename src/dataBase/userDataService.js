@@ -81,3 +81,18 @@ export const getData = async () => {
 }
 
 
+export const generateRandomdata=async( )=>{
+
+
+    for(let i=0;i<20;i++){
+      const  data={
+            contactName: "Test Name"+i,
+            phoneNumber:_.random(1000000000, 9999999999),
+            email:i+"testEmail@gmail.com",
+            address:"No-"+i+",testStreet,testTown"
+          }
+        await writeUserData(data)
+    }
+
+}
+

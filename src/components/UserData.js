@@ -9,6 +9,8 @@ const columns = [
         title: 'Name',
         dataIndex: 'contactName',
         key: 'contactName',
+        sorter: (a, b) => a.contactName.localeCompare(b.contactName)
+
        
     },
     {
