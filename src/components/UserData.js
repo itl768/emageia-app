@@ -35,9 +35,12 @@ function UserData(props) {
     const [baseData, setBaseData] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [currentUser, setCurrentUser] = useState("")
+    const [loading,setLoading]=useState(false)
     const fetchData = async () => {
+        setLoading(true);
         const data = await getData()
         setBaseData(data)
+        setLoading(false)
     }
     useEffect(() => {
         fetchData()
@@ -97,6 +100,7 @@ function UserData(props) {
 
                     style={{ width: '100%', cursor: 'pointer' }}
                     bordered
+                    loading={loading}
                     dataSource={filterTable == null ? baseData : filterTable}
                     columns={columns}
                     onRow={(record, rowIndex) => {
