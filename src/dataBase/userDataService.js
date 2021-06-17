@@ -16,7 +16,7 @@ export const writeUserData = async (data) => {
     }
     else {
         const id = uudigen()
-        const test = firebase.database().ref('/userData/' + id).set(
+        firebase.database().ref('/userData/' + id).set(
             {
                 key: id,
                 contactName: _.get(data, "contactName", ""),
@@ -41,7 +41,7 @@ export const updateData = async (data) => {
     }
     else {
 
-        const test = firebase.database().ref('/userData/' + _.get(data, "key", "")).update(
+        firebase.database().ref('/userData/' + _.get(data, "key", "")).update(
             {
                 key: _.get(data, "key", ""),
                 contactName: _.get(data, "contactName", ""),
@@ -58,19 +58,19 @@ export const updateData = async (data) => {
 
 export const deleteData = async (data) => {
 
-    const test = firebase.database().ref('/userData/' + _.get(data, "key", "")).remove()
+    firebase.database().ref('/userData/' + _.get(data, "key", "")).remove()
     return { type: "success", message: "Successfully Deleted" }
 }
 
 export const getData = async () => {
     const array = [];
-    const data = await firebase.database().ref('/userData').get()
+    await firebase.database().ref('/userData').get()
         .then((snapshot) => {
             if (snapshot.exists()) {
 
                 Object.values(snapshot.val()).forEach(e => array.push(e))
 
-            } 
+            }
         }).catch((error) => {
             console.error(error);
         });
@@ -79,3 +79,5 @@ export const getData = async () => {
 
 
 }
+
+

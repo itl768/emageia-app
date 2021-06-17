@@ -2,7 +2,7 @@ import React,{useState} from "react";
 import UserForm from './components/UserForm';
 import UserData from './components/UserData';
 import { Layout, Divider } from "antd";
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content } = Layout;
 
 
 const App = () => {

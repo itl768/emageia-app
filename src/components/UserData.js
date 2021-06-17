@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Table, Input, Row, Col, Modal,Button } from 'antd';
 import UserForm from './UserForm';
-import _ from 'lodash'
 import { getData } from '../dataBase/userDataService'
 
 
@@ -74,26 +73,6 @@ function UserData(props) {
     return (<>
      <div style={{ textAlign:"center",fontSize:'20px' }}>User Contact Details</div>
         <Col style={{ width: 'auto' }}>
-            {/* <Row >
-                <Col>
-                <Button type="primary" style={{
-                        
-                    }}>Submit</Button>
-                </Col>
-                <Col>
-                <Input.Search
-                    style={{
-                        width: '300px', padding: '20px', flexWrap: 'wrap',
-                        alignContent: 'center'
-                    }}
-                    placeholder="Search by..."
-                    enterButton
-                    onChange={(e) => search(e.target.value)}
-                />
-                </Col>
-              
-               
-            </Row> */}
 
             <Input.Group size="medium" style={{padding:"20px"}}>
                 <Row gutter={8} justify="end">
